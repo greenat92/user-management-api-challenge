@@ -14,9 +14,17 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('Health check', () => {
+    it('should return 200', () => {
+      const mockUptime = 15;
+      const mockVerios = '1.0.1';
+      jest.spyOn(process, 'uptime').mockReturnValue(mockUptime);
+      expect(appController.getServiceInfo()).toEqual({
+        mockVerios,
+        name: 'Yassir auth service!',
+        uptime: mockUptime,
+      });
+      jest.restoreAllMocks();
     });
   });
 });
