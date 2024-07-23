@@ -13,6 +13,6 @@ export class AppService {
       name,
       version,
       uptime: process.uptime(),
-    };;
+    };
   }
 }
