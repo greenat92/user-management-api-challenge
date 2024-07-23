@@ -1,9 +1,9 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { typeOrmConfig } from './config/database.config';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { typeOrmConfig } from './config/database.config';
 
 @Module({
   imports: [
@@ -12,16 +12,20 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService): Promise<TypeOrmModuleOptions> => {
-        const dbConfig = configService.get('DATABASE_CONFIG') || {};
-        return {
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<TypeOrmModuleOptions> => {
+        const config = {
           ...typeOrmConfig,
-          ...dbConfig,
+          ...configService.get('DATABASE_CONFIG'),
         };
+
+        return config as TypeOrmModuleOptions;
       },
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
