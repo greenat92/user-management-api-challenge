@@ -16,7 +16,9 @@ import { BlacklistedTokensService } from './blacklisted-tokens.service';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('ACCESS_TOKEN_EXPIRE_TIME') },
+        signOptions: {
+          expiresIn: configService.get<string>('ACCESS_TOKEN_EXPIRE_TIME'),
+        },
       }),
       inject: [ConfigService],
     }),
