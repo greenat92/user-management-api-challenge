@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import { User } from './user.entity';
@@ -18,7 +22,10 @@ export class UsersService {
       throw new ConflictException('Username already exists');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = this.usersRepository.create({ username, password: hashedPassword });
+    const user = this.usersRepository.create({
+      username,
+      password: hashedPassword,
+    });
     return this.usersRepository.save(user);
   }
 
@@ -29,22 +36,50 @@ export class UsersService {
       .getOne();
   }
 
+  async userMe(id: number): Promise<{
+    username: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }> {
+    const existingUser = await this.findUserById(id);
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    return {
+      username: existingUser.username,
+      createdAt: existingUser.created_at,
+      updatedAt: existingUser.updated_at,
+    };
+  }
+
   async findUserById(id: number): Promise<User> {
-    return this.usersRepository
+    return await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .getOne();
   }
 
-  async updateUser(id: number, newUsername: string, oldPassword: string, newPassword: string): Promise<User> {
+  async updateUser(
+    id: number,
+    newUsername: string,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<{
+    username: string;
+    updateAt: Date;
+  }> {
     const user = await this.findUserById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     if (newUsername) {
-      const existingUserWithNewUsername = await this.findUserByUsername(newUsername);
-      if (existingUserWithNewUsername && existingUserWithNewUsername.id !== id) {
+      const existingUserWithNewUsername =
+        await this.findUserByUsername(newUsername);
+      if (
+        existingUserWithNewUsername &&
+        existingUserWithNewUsername.id !== id
+      ) {
         throw new ConflictException('Username already in use');
       }
       user.username = newUsername;
@@ -58,11 +93,16 @@ export class UsersService {
       user.password = await bcrypt.hash(newPassword, 10);
     }
 
-    return this.usersRepository.save(user);
+    const updatedUser = await this.usersRepository.save(user);
+
+    return {
+      username: updatedUser.username,
+      updateAt: updatedUser.updated_at,
+    };
   }
 
   async setRefreshToken(userId: number, refreshToken: string): Promise<void> {
-    await this.entityManager.transaction(async transactionalEntityManager => {
+    await this.entityManager.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager
         .createQueryBuilder()
         .update(User)
@@ -73,7 +113,7 @@ export class UsersService {
   }
 
   async removeRefreshToken(userId: number): Promise<void> {
-    await this.entityManager.transaction(async transactionalEntityManager => {
+    await this.entityManager.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager
         .createQueryBuilder()
         .update(User)
@@ -83,7 +123,9 @@ export class UsersService {
     });
   }
 
-  async findUserByRefreshToken(refreshToken: string): Promise<User | undefined> {
+  async findUserByRefreshToken(
+    refreshToken: string,
+  ): Promise<User | undefined> {
     return this.usersRepository
       .createQueryBuilder('user')
       .where('user.refreshToken = :refreshToken', { refreshToken })
