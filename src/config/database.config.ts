@@ -1,9 +1,10 @@
+// src/config/database.config.ts
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from '../users/users.entity';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'sqlite',
   database: 'db.sqlite',
-  entities: [User],
-  synchronize: true,
+  entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  synchronize: process.env.APP_ENV !== 'production',
+  logging: process.env.APP_ENV !== 'production',
 };
