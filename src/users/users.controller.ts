@@ -40,8 +40,8 @@ export class UsersController {
   })
   @ApiBearerAuth()
   async getMe(@Req() req: Request) {
-    const userId = req.user['id']; // Extracted from the JWT token
-    return this.usersMeService.getUserMe(userId);
+    const username = req.user['username']; // Extracted from the JWT token
+    return this.usersMeService.getUserMe(username);
   }
 
   @Patch('me')

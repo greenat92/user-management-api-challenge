@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { BlacklistedTokensService } from './blacklisted-tokens.service';
+import { CacheModule } from '@shared/services/cache/cache.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BlacklistedTokensService } from './blacklisted-tokens.service';
     }),
     UsersModule,
     ConfigModule,
+    CacheModule,
   ],
   providers: [AuthService, JwtStrategy, BlacklistedTokensService],
   controllers: [AuthController],

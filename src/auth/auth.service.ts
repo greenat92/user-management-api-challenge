@@ -16,7 +16,9 @@ import {
   IRegisterBodyDto,
   IRegisterRes,
 } from './auth.interface';
+import { IUser } from '../users/users.interface';
 import { BlacklistedTokensService } from './blacklisted-tokens.service';
+import { UserCacheService } from '@shared/services/cache/user-cache.service';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,8 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
+    private readonly blacklistedTokensService: BlacklistedTokensService,
+    private readonly userCacheService: UserCacheService,
   ) {}
 
   async register(registerBodyDto: IRegisterBodyDto): Promise<IRegisterRes> {
@@ -35,8 +38,11 @@ export class AuthService {
       this.logger.error('Username already exists');
       throw new ConflictException('Username already exists');
     }
-    const user = await this.usersService.createUser(username, password);
 
+    // create the user and save it in the database
+    const user = await this.usersService.createUser(username, password);
+    // add user to cache
+    this.userCacheService.setUserCache(user.username, user);
     return {
       username: user.username,
       createdAt: user.created_at,
@@ -45,11 +51,19 @@ export class AuthService {
 
   async login(loginBodyDto: ILoginBodyDto): Promise<ILoginRes> {
     const { username, password } = loginBodyDto;
-    const user = await this.usersService.findUserByUsername(username);
-    this.logger.log(`User fetched: ${JSON.stringify(user)}`);
+
+    let user: Partial<IUser> | undefined;
+
+    // fetch user from cache
+    user = await this.userCacheService.getUserCache(username);
+
+    // user is not in the cache
+    if (!user) {
+      // get user from database
+      user = await this.usersService.findUserByUsername(username);
+    }
 
     if (!user) {
-      this.logger.error('User not found');
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -61,8 +75,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const accessToken = this.generateAccessToken(user.id);
-    const refreshToken = this.generateRefreshToken(user.id);
+    const accessToken = this.generateAccessToken(user.id, user.username);
+    const refreshToken = this.generateRefreshToken(user.id, user.username);
 
     await this.usersService.setRefreshToken(user.id, refreshToken);
 
@@ -81,12 +95,15 @@ export class AuthService {
       // Invalidate refresh token
       await this.usersService.removeRefreshToken(userId);
 
+      // invalidate the cache
+      this.userCacheService.invalidateUserCache(user.username);
+
       // this is just a an example how to handel it in real product we should provide a propre solution
       // Add access token to blacklist (for this example, we'll need the token)
       // In practice, you might need to handle this differently
       const tokens = [
-        this.generateAccessToken(user.id),
-        this.generateRefreshToken(user.id),
+        this.generateAccessToken(user.id, user.username),
+        this.generateRefreshToken(user.id, user.username),
       ];
       tokens.forEach((token) => this.blacklistedTokensService.addToken(token));
     }
@@ -96,30 +113,52 @@ export class AuthService {
     refreshTokenBody: IRefreshTokenBodyDto,
   ): Promise<IRefreshTokenRes> {
     const { refreshToken } = refreshTokenBody;
-    const user = await this.usersService.findUserByRefreshToken(refreshToken);
+
+    // Decode the refresh token to get the payload
+    let decodedToken: any;
+    try {
+      decodedToken = jwt.decode(refreshToken) as { username: string };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    if (!decodedToken || !decodedToken.username) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const user = await this.usersService.findUserByUsername(
+      decodedToken?.username,
+    );
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const accessToken = this.generateAccessToken(user.id);
-    const newRefreshToken = this.generateRefreshToken(user.id);
+    const accessToken = this.generateAccessToken(user.id, user.username);
+    const newRefreshToken = this.generateRefreshToken(user.id, user.username);
 
     await this.usersService.setRefreshToken(user.id, newRefreshToken);
+
+    // update user cache
+    this.userCacheService.setUserCache(user.username, {
+      ...user,
+      refreshToken: newRefreshToken,
+      updated_at: new Date(),
+    });
 
     return { accessToken, refreshToken: newRefreshToken };
   }
 
-  private generateAccessToken(userId: number): string {
+  private generateAccessToken(userId: number, username): string {
     return jwt.sign(
-      { userId },
+      { userId, username },
       this.configService.get<string>('ACCESS_TOKEN_SECRET'),
       { expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRE_TIME') },
     );
   }
 
-  private generateRefreshToken(userId: number): string {
+  private generateRefreshToken(userId: number, username: string): string {
     return jwt.sign(
-      { userId },
+      { userId, username },
       this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       {
         expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRE_TIME'),
