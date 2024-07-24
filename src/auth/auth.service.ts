@@ -8,7 +8,15 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { CustomLogger } from '../shared/custom-logger/custom-logger.service';
-// import { BlacklistedTokensService } from './blacklisted-tokens.service';
+import {
+  ILoginBodyDto,
+  ILoginRes,
+  IRefreshTokenBodyDto,
+  IRefreshTokenRes,
+  IRegisterBodyDto,
+  IRegisterRes,
+} from './auth.interface';
+import { BlacklistedTokensService } from './blacklisted-tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -17,13 +25,11 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    // private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
+    private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
   ) {}
 
-  async register(
-    username: string,
-    password: string,
-  ): Promise<{ username: string; createdAt: Date }> {
+  async register(registerBodyDto: IRegisterBodyDto): Promise<IRegisterRes> {
+    const { username, password } = registerBodyDto;
     const existingUser = await this.usersService.findUserByUsername(username);
     if (existingUser) {
       this.logger.error('Username already exists');
@@ -37,16 +43,8 @@ export class AuthService {
     };
   }
 
-  async login(
-    username: string,
-    password: string,
-  ): Promise<{
-    accessToken: string;
-    refreshToken: string;
-    username: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }> {
+  async login(loginBodyDto: ILoginBodyDto): Promise<ILoginRes> {
+    const { username, password } = loginBodyDto;
     const user = await this.usersService.findUserByUsername(username);
     this.logger.log(`User fetched: ${JSON.stringify(user)}`);
 
@@ -83,16 +81,21 @@ export class AuthService {
       // Invalidate refresh token
       await this.usersService.removeRefreshToken(userId);
 
+      // this is just a an example how to handel it in real product we should provide a propre solution
       // Add access token to blacklist (for this example, we'll need the token)
       // In practice, you might need to handle this differently
-      // const tokens = [this.generateAccessToken(user.id), this.generateRefreshToken(user.id)];
-      // tokens.forEach(token => this.blacklistedTokensService.addToken(token));
+      const tokens = [
+        this.generateAccessToken(user.id),
+        this.generateRefreshToken(user.id),
+      ];
+      tokens.forEach((token) => this.blacklistedTokensService.addToken(token));
     }
   }
 
   async refreshToken(
-    refreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+    refreshTokenBody: IRefreshTokenBodyDto,
+  ): Promise<IRefreshTokenRes> {
+    const { refreshToken } = refreshTokenBody;
     const user = await this.usersService.findUserByRefreshToken(refreshToken);
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');

@@ -1,7 +1,8 @@
 import { IsString, MinLength, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IRegisterBodyDto } from '../auth.interface';
 
-export class RegisterDto {
+export class RegisterDto implements IRegisterBodyDto {
   @ApiProperty({ description: 'Username for registration' })
   @IsString()
   @MinLength(4, {
