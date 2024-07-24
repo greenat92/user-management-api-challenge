@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  user-management-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-management-api-co
+    ports:
+      - '4000:4000'
+    env_file:
+      - .env
+    volumes:
+      - ./localUsersDb.sqlite:/usr/src/app/localUsersDb.sqlite
+    networks:
+      - app-network
+
+# Define custom bridge network
+networks:
+  app-network:
+    driver: bridge

@@ -6,6 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
+import { UsersModule } from '../users/users.module';
+import { BlacklistedTokensService } from './blacklisted-tokens.service';
 
 @Module({
   imports: [
@@ -14,13 +16,16 @@ import { AuthController } from './auth.controller';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
-        signOptions: { expiresIn: '15m' },
+        signOptions: {
+          expiresIn: configService.get<string>('ACCESS_TOKEN_EXPIRE_TIME'),
+        },
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
     ConfigModule,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, BlacklistedTokensService],
   controllers: [AuthController],
   exports: [AuthService],
 })

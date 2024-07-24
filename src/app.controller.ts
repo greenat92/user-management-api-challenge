@@ -2,12 +2,11 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
-@Controller()
+@Controller('health-check')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Health check api' })
   @ApiOkResponse({
     description: 'Service information retrieved successfully',
     schema: {

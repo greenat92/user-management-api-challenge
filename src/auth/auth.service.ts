@@ -3,44 +3,37 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../users/user.entity';
+import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { CustomLogger } from '../shared/custom-logger/custom-logger.service';
+// import { BlacklistedTokensService } from './blacklisted-tokens.service';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new CustomLogger(AuthService.name);
+
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private configService: ConfigService,
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+    // private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
   ) {}
 
   async register(
     username: string,
     password: string,
-  ): Promise<{ username: string; createAt: Date }> {
-    // Check if username already exists
-    const existingUser = await this.usersRepository.findOne({
-      where: { username },
-    });
+  ): Promise<{ username: string; createdAt: Date }> {
+    const existingUser = await this.usersService.findUserByUsername(username);
     if (existingUser) {
+      this.logger.error('Username already exists');
       throw new ConflictException('Username already exists');
     }
+    const user = await this.usersService.createUser(username, password);
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and save new user
-    const user = this.usersRepository.create({
-      username,
-      password: hashedPassword,
-    });
     return {
       username: user.username,
-      createAt: new Date(),
+      createdAt: user.created_at,
     };
   }
 
@@ -54,18 +47,26 @@ export class AuthService {
     createdAt: Date;
     updatedAt: Date;
   }> {
-    // Find user by username
-    const user = await this.usersRepository.findOne({ where: { username } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    const user = await this.usersService.findUserByUsername(username);
+    this.logger.log(`User fetched: ${JSON.stringify(user)}`);
+
+    if (!user) {
+      this.logger.error('User not found');
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Generate tokens
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    this.logger.log(`Password valid: ${isPasswordValid}`);
+
+    if (!isPasswordValid) {
+      this.logger.error('Invalid password');
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const accessToken = this.generateAccessToken(user.id);
     const refreshToken = this.generateRefreshToken(user.id);
 
-    // Save refresh token in the database
-    await this.usersRepository.update(user.id, { refreshToken });
+    await this.usersService.setRefreshToken(user.id, refreshToken);
 
     return {
       username: user.username,
@@ -77,29 +78,30 @@ export class AuthService {
   }
 
   async logout(userId: number): Promise<void> {
-    // Remove refresh token
-    await this.usersRepository.update(userId, { refreshToken: null });
+    const user = await this.usersService.findUserById(userId);
+    if (user) {
+      // Invalidate refresh token
+      await this.usersService.removeRefreshToken(userId);
+
+      // Add access token to blacklist (for this example, we'll need the token)
+      // In practice, you might need to handle this differently
+      // const tokens = [this.generateAccessToken(user.id), this.generateRefreshToken(user.id)];
+      // tokens.forEach(token => this.blacklistedTokensService.addToken(token));
+    }
   }
 
   async refreshToken(
     refreshToken: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    // Find user by refresh token
-    const user = await this.usersRepository.findOne({
-      where: { refreshToken },
-    });
+    const user = await this.usersService.findUserByRefreshToken(refreshToken);
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    // Generate new tokens
     const accessToken = this.generateAccessToken(user.id);
     const newRefreshToken = this.generateRefreshToken(user.id);
 
-    // Update refresh token in the database
-    await this.usersRepository.update(user.id, {
-      refreshToken: newRefreshToken,
-    });
+    await this.usersService.setRefreshToken(user.id, newRefreshToken);
 
     return { accessToken, refreshToken: newRefreshToken };
   }
@@ -108,7 +110,7 @@ export class AuthService {
     return jwt.sign(
       { userId },
       this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      { expiresIn: '30m' },
+      { expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRE_TIME') },
     );
   }
 
@@ -116,7 +118,9 @@ export class AuthService {
     return jwt.sign(
       { userId },
       this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-      { expiresIn: '7d' },
+      {
+        expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRE_TIME'),
+      },
     );
   }
 }
