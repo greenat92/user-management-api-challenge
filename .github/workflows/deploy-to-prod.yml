@@ -28,6 +28,6 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: user-management-api-prod
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-service:prod
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-management-api:prod
           region: us-central1
           project_id: ${{ secrets.GCP_PROJECT_ID }}
