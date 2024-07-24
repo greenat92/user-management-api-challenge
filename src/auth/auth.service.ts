@@ -8,6 +8,14 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { CustomLogger } from '../shared/custom-logger/custom-logger.service';
+import {
+  ILoginBodyDto,
+  ILoginRes,
+  IRefreshTokenBodyDto,
+  IRefreshTokenRes,
+  IRegisterBodyDto,
+  IRegisterRes,
+} from './auth.interface';
 // import { BlacklistedTokensService } from './blacklisted-tokens.service';
 
 @Injectable()
@@ -20,10 +28,8 @@ export class AuthService {
     // private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
   ) {}
 
-  async register(
-    username: string,
-    password: string,
-  ): Promise<{ username: string; createdAt: Date }> {
+  async register(registerBodyDto: IRegisterBodyDto): Promise<IRegisterRes> {
+    const { username, password } = registerBodyDto;
     const existingUser = await this.usersService.findUserByUsername(username);
     if (existingUser) {
       this.logger.error('Username already exists');
@@ -37,16 +43,8 @@ export class AuthService {
     };
   }
 
-  async login(
-    username: string,
-    password: string,
-  ): Promise<{
-    accessToken: string;
-    refreshToken: string;
-    username: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }> {
+  async login(loginBodyDto: ILoginBodyDto): Promise<ILoginRes> {
+    const { username, password } = loginBodyDto;
     const user = await this.usersService.findUserByUsername(username);
     this.logger.log(`User fetched: ${JSON.stringify(user)}`);
 
@@ -91,8 +89,9 @@ export class AuthService {
   }
 
   async refreshToken(
-    refreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+    refreshTokenBody: IRefreshTokenBodyDto,
+  ): Promise<IRefreshTokenRes> {
+    const { refreshToken } = refreshTokenBody;
     const user = await this.usersService.findUserByRefreshToken(refreshToken);
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
