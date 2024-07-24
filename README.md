@@ -1,73 +1,263 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# User Management and Auth Service API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a User Management and Authentication Service API built using NestJS, TypeORM, SQLite, and Docker. It provides features such as user registration, authentication, and profile management. The project uses TypeORM for database operations and SQLite as the database. Docker is used to containerize the application for easy deployment and development.
 
-## Description
+## Technologies Used
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **TypeORM**: An ORM for TypeScript and JavaScript (ES7, ES6, ES5) that supports many database types.
+- **SQLite**: A C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+- **Docker**: A tool designed to make it easier to create, deploy, and run applications by using containers.
+- **Swagger**: A tool for documenting APIs.
+- **Helmet**: A middleware for securing Express apps by setting various HTTP headers.
+- **Winston**: A logger for Node.js applications.
 
-## Installation
+## Project Structure
+
+- **src/**: Contains the source code of the application.
+  - **users/**: Contains user-related modules, controllers, and services.
+  - **auth/**: Contains authentication-related modules, controllers, and services.
+  - **shared/**: Contains shared utilities, helpers, and services.
+  - **config/**: Contains configuration files.
+  - **main.ts**: Entry point of the application.
+  - **app.module.ts**: Main application module.
+- **test/**: Contains the setup env for tests for the application.
+- **Dockerfile**: Docker configuration for building the application container.
+- **docker-compose.yml**: Docker Compose configuration for setting up the application and database services.
+
+## Prerequisites
+
+- **Node.js**: Ensure you have Node.js installed.
+- **Docker**: Ensure you have Docker installed.
+- **Yarn**: Ensure you have Yarn installed (optional but recommended).
+
+## Getting Started
+
+### Overview of Implemented API Functionalities
+
+Here's a brief overview of the key functionalities i’ve implemented so far for our API:
+
+1. **User Management**
+
+   - **Get User Profile**: Enables users to update their profile information and change their password.
+   - **update User Profile**: Enables users to update their profile information and change their password.
+
+2. **Authentication**
+   - **User Registration**: Allows users to sign up by providing their username and password. Passwords are securely hashed before storage.
+   - **User Login**: Authenticates users and issues JWT access and refresh tokens for secure session management.
+   - **JWT Authentication**: Utilizes JSON Web Tokens (JWT) to manage user sessions securely. Access tokens have an expiration time, and refresh tokens are used to obtain new access tokens without requiring re-login.
+   - **Logout**: Ends the user session by invalidating tokens. Access tokens are marked as blacklisted to prevent further use.
+   - **Token Blacklisting**: Implements token blacklisting to handle logouts and invalidate tokens, ensuring they cannot be used after logout.
+
+3. **Database Setup and Management**
+   - **SQLite Database**: Uses SQLite as the database solution for development and testing. The database is set up with TypeORM and supports user management operations.
+   - **Testing Setup**: Includes scripts for setting up a test database with SQLite, clearing collections, and seeding data.
+
+4. **Testing Strategies**
+   - **Unit Testing**: Tests individual components of the application to ensure they work as expected.
+   - **Integration Testing**: Verifies that different parts of the system work together correctly.
+   - **End-to-End (E2E) Testing**: Simulates real user scenarios to ensure the entire application functions properly.
+   - **Smoke Testing**: Quickly checks key functionalities after changes to catch major issues early.
+   - **Regression Testing**: Ensures new changes don’t break existing functionality.
+   - **Stress Testing**: Tests how the system performs under heavy load to ensure stability and performance.
+
+5. **API Documentation**
+   - **Swagger Integration**: Provides interactive API documentation using Swagger, making it easier to test and understand the API endpoints.
+
+This setup ensures robust user management, secure authentication, and thorough testing to maintain high-quality and reliable software.
+
+### Clone the Repository
 
 ```bash
-$ yarn install
+git clone https://github.com/greenat92/user-management-api-challenge
+cd user-management-api-challenge
+yarn install
 ```
 
-## Running the app
+### Environment Variables
+
+Create a .env file in the root directory with the following content:
 
 ```bash
-# development
-$ yarn run start
 
-# watch mode
-$ yarn run start:dev
+ACCESS_TOKEN_SECRET=1234
+REFRESH_TOKEN_SECRET=1234
+ACCESS_TOKEN_EXPIRE_TIME=15m
+REFRESH_TOKEN_EXPIRE_TIME=7d
+PORT=3000
+HOST=localhost
+APP_NAME=management and auth service api
+APP_ENV=local
+APP_URL=http://localhost:3000/
+DB_NAME=localUsersDb.sqlite
+DB_URI=
+DB_NAME_TESTING=localUsersDbTesting.sqlite
+DB_URI_TESTING=
+DATABASE_CONFIG=
+LOG_LEVEL=info
 
-# production mode
-$ yarn run start:prod
 ```
 
-## Test
+### Running the Application
+
+#### Without Docker
+
+- **Setup SQLite Database**
+
+  Ensure you have SQLite installed and create a database file localUsersDb.sqlite in the project root.
+
+- **Run the Application**
+
+  ```bash
+  yarn start:dev
+  ```
+
+#### Using Docker
+
+- **Build and Run the Containers**
+
+  ```bash
+  docker-compose up --build
+  ```
+
+- **Access the Application**
+
+  The application will be running on <http:/>/localhost:4000>
+
+- **Swagger Documentation**
+
+  Access the API documentation at <http://localhost:4000/api/docs>.
+
+### Running Tests
+
+1. **Setup Test Database**
+
+   ```bash
+   yarn test:db-setup:backend
+   ```
+
+2. **Run All Tests**
+
+   ```bash
+   yarn test
+   ```
+
+3. **Run Unit Tests**
+
+   ```bash
+   yarn test:unit
+   ```
+
+4. **Run smoke tests**
+
+   ```bash
+   yarn test:smoke
+   ```
+
+5. **Run smoke e2e tests**
+
+   ```bash
+   yarn test:e2e
+   ```
+
+6. **Watch Tests**
+
+   ```bash
+   yarn test:watch
+   ```
+
+7. **Run Tests with Coverage**
+
+   ```bash
+   yarn test:cov
+   ```
+
+8. **Debug Tests**
+
+   ```bash
+   yarn test:db-setup:debug
+   ```
+
+### Formatting and Linting
+
+- **Format Code**
+
+  ```bash
+  yarn format
+  ```
+
+- **Format Code**
+
+  ```bash
+  yarn yarn lint
+  ```
+
+### Deployment
+
+For production deployment, build the application and start it using:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+  yarn build
+  yarn start:prod
 ```
 
-## Support
+### Logs and Error Handling
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The application uses Winston for logging. Logs are printed to the console in JSON format with timestamps. Custom error handling is implemented to log unhandled promise rejections and uncaught exceptions.
 
-## Stay in touch
+### Performance Measurement Using perf_hooks
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+In modern applications, especially those with high concurrency and complex operations, identifying performance bottlenecks and monitoring system performance is crucial. Without a systematic approach to performance measurement, it is challenging to:
 
-## License
+- **Identify Performance Issues**: Developers often face difficulties in pinpointing which parts of the application are causing slowdowns or consuming excessive resources.
+- **Maintain Performance Metrics**: Ad-hoc performance logging can be inconsistent, making it hard to compare metrics over time or across different parts of the application.
+- **Debug and Optimize**: Without precise measurements, optimizing the application becomes guesswork, which is inefficient and can lead to suboptimal improvements.
 
-Nest is [MIT licensed](LICENSE).
+**Proposal:**
+I proposed the adoption of a dedicated `src/shared/helpers/PerformanceMeasureHelper` class to standardize and streamline performance measurement within our Node.js application. This class will:
+
+- **Generate Unique Identifiers**: Ensure that parallel measurements do not interfere with each other by using ULIDS.
+- **Conditional Performance Measurement**: Allow performance measurement to be enabled based on an environment variable or always enabled for specific instances.
+- **Automatic Logging**: Integrate with our existing custom logger to automatically log performance data.
+- **Consistent Labeling and Formatting**: Ensure that all performance measurements are consistently labeled and formatted, facilitating easier analysis.
+
+### What Do You Think About Testing?
+
+This section to answer the last question of the challenge based on my experience on testing and what implemented so far for this challenge, As known as Testing is key to making sure software works well and is reliable. Here’s a quick look at the different types of testing we use:
+
+1. **Unit Testing**:
+   - Tests individual parts of the code.
+   - Catches bugs early and makes fixing them easier.
+
+2. **Integration Testing**:
+   - Checks how different parts of the system work together.
+   - Finds issues with how modules interact.
+
+3. **End-to-End (E2E) Testing**:
+   - Simulates real user scenarios to test the whole system.
+   - Ensures everything works from start to finish.
+
+4. **Smoke Testing**:
+   - Quickly checks if key features work after changes.
+   - Helps catch major issues early.
+
+5. **Regression Testing**:
+   - Ensures new changes don’t break existing features.
+   - Verifies that old bugs haven’t reappeared.
+
+6. **Stress Testing**:
+   - Tests how the system handles heavy loads.
+   - Finds out how it behaves under extreme conditions.
+
+### Why Testing Matters
+
+- **Find Bugs Early**: Catches issues early, saving time and effort.
+- **Better Code Quality**: Encourages clean, maintainable code.
+- **Safe Changes**: Confirms that new updates don’t break anything.
+- **Documentation**: Acts as a guide to how the software should work.
+
+### Summary
+
+Testing helps us build reliable and high-quality software by finding issues early, ensuring everything works together, and verifying performance under stress. It’s essential for delivering stable and trustworthy applications.

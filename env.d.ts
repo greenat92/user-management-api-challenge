@@ -17,6 +17,7 @@ declare global {
         // Database
         DB_URI: string;
         DB_NAME: string;
+        DATABASE_CONFIG: string;
   
         // Testing db
   
@@ -33,6 +34,9 @@ declare global {
         REFRESH_TOKEN_SECRET: string;
         ACCESS_TOKEN_EXPIRE_TIME: string;
         REFRESH_TOKEN_EXPIRE_TIME: string;
+
+        // logs
+        LOG_LEVEL: string;
       }
     }
   }
