@@ -1,9 +1,7 @@
-name: Deploy to Cloud Run - Dev
+name: Deploy to Cloud Run - Deploy Pull Request
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -12,6 +10,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Extract branch name
+        id: extract_branch
+        run: echo "branch_name=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
@@ -27,7 +29,7 @@ jobs:
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         with:
-          service: user-management-api-dev
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-management-api:dev
+          service: user-management-api-${{ env.branch_name }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-management-api-service:${{ env.branch_name }}
           region: us-central1
           project_id: ${{ secrets.GCP_PROJECT_ID }}
