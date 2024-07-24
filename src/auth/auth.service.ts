@@ -16,7 +16,7 @@ import {
   IRegisterBodyDto,
   IRegisterRes,
 } from './auth.interface';
-// import { BlacklistedTokensService } from './blacklisted-tokens.service';
+import { BlacklistedTokensService } from './blacklisted-tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    // private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
+    private readonly blacklistedTokensService: BlacklistedTokensService, // Inject the service
   ) {}
 
   async register(registerBodyDto: IRegisterBodyDto): Promise<IRegisterRes> {
@@ -81,10 +81,14 @@ export class AuthService {
       // Invalidate refresh token
       await this.usersService.removeRefreshToken(userId);
 
+      // this is just a an example how to handel it in real product we should provide a propre solution
       // Add access token to blacklist (for this example, we'll need the token)
       // In practice, you might need to handle this differently
-      // const tokens = [this.generateAccessToken(user.id), this.generateRefreshToken(user.id)];
-      // tokens.forEach(token => this.blacklistedTokensService.addToken(token));
+      const tokens = [
+        this.generateAccessToken(user.id),
+        this.generateRefreshToken(user.id),
+      ];
+      tokens.forEach((token) => this.blacklistedTokensService.addToken(token));
     }
   }
 
