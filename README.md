@@ -124,11 +124,11 @@ LOG_LEVEL=info
 
 - **Access the Application**
 
-  The application will be running on <http:/>/localhost:4000>
+  The application will be running on <http://localhost:3000/api/docs>
 
 - **Swagger Documentation**
 
-  Access the API documentation at <http://localhost:4000/api/docs>.
+  Access the API documentation at <http://localhost:3000/api/docs>.
 
 ### Running Tests
 
