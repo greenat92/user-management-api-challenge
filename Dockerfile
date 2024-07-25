@@ -4,15 +4,17 @@ FROM node:lts-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and yarn.lock and install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install --production
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json ./
 
-# Copy application source
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-# Expose port
+# Expose the port your application runs on
 EXPOSE 4000
 
 # Start the application
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
