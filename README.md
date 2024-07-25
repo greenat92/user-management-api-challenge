@@ -1,5 +1,15 @@
 # User Management and Auth Service API
 
+This project was created as part of the hiring challenge presented by the WHATEVER.WORKS team. I'd like to take a moment to extend my heartfelt
+gratitude to the WHATEVER.WORKS team for offering me this incredible opportunity. Working on this
+challenge has been both enlightening and rewarding, and I deeply appreciate the trust and
+confidence they've placed in me.
+This challenge not only allowed me to showcase my skills but also provided a platform to
+learn, grow, and collaborate. I value this opportunity greatly and am excited about the
+potential to contribute further to the WHATEVER.WORKS team's goals and vision.
+
+Thank you once again to the WHATEVER.WORKS team for this amazing opportunity!
+
 ## Project Overview
 
 This project is a User Management and Authentication Service API built using NestJS, TypeORM, SQLite, and Docker. It provides features such as user registration, authentication, and profile management. The project uses TypeORM for database operations and SQLite as the database. Docker is used to containerize the application for easy deployment and development.
@@ -8,7 +18,7 @@ This project is a User Management and Authentication Service API built using Nes
 
 - **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
 - **TypeORM**: An ORM for TypeScript and JavaScript (ES7, ES6, ES5) that supports many database types.
-- **SQLite**: A C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+- **SQLite**: A small, fast, self-contained, high-reliability, full-featured, SQL database engine.
 - **Docker**: A tool designed to make it easier to create, deploy, and run applications by using containers.
 - **Swagger**: A tool for documenting APIs.
 - **Helmet**: A middleware for securing Express apps by setting various HTTP headers.
@@ -94,9 +104,9 @@ HOST=localhost
 APP_NAME=management and auth service api
 APP_ENV=local
 APP_URL=http://localhost:3000/
-DB_NAME=localUsersDb.sqlite
+DB_NAME=db.sqlite
 DB_URI=
-DB_NAME_TESTING=localUsersDbTesting.sqlite
+DB_NAME_TESTING=dbTesting.sqlite
 DB_URI_TESTING=
 DATABASE_CONFIG=
 LOG_LEVEL=info
@@ -138,7 +148,7 @@ LOG_LEVEL=info
 1. **Setup Test Database**
 
    ```bash
-   npm run test:db-setup:backend
+   npm run test:db-setup
    ```
 
 2. **Run All Tests**
@@ -180,7 +190,7 @@ LOG_LEVEL=info
 8. **Debug Tests**
 
    ```bash
-   npm run test:db-setup:debug
+   npm run test:debug
    ```
 
 ### Formatting and Linting
@@ -199,7 +209,7 @@ LOG_LEVEL=info
 
 ### Deployment
 
-For production deployment, build the application and start it using:
+For production deployment, build the application and start using it:
 
 ```bash
   npm run build
@@ -266,6 +276,56 @@ This section to answer the last question of the challenge based on my experience
 - **Safe Changes**: Confirms that new updates don’t break anything.
 - **Documentation**: Acts as a guide to how the software should work.
 
-### Summary
+### Testing Summary
 
 Testing helps us build reliable and high-quality software by finding issues early, ensuring everything works together, and verifying performance under stress. It’s essential for delivering stable and trustworthy applications.
+
+Also I took some notes about designing a rest api:
+
+### REST architecture
+
+ensures clear communication and interoperability, making it easier to
+integrate and scale services.
+
+### Caching
+
+boosts performance by storing frequently accessed data, reducing the load on the
+database and improving response times. in our case cache the user data.
+
+### Documentation
+
+is crucial in software development as it provides a clear understanding of
+code functionality, aids in troubleshooting, and ensures maintainability for future developers.
+In our case there’s 2 docs, the README file explaining how to run the project, and an
+auto-generated api to explain the apis usage with examples for responses and code errors.
+
+### Conclusion & Result
+
+I've built a REST API with NestJS and sqlite as a database for basic user managements and auth api. with some testing cases and
+define some ci-cd workflow using github actions
+
+#### What I Learned
+
+This project was a fantastic learning experience. I got hands-on practice with NestJS,
+Sqlite some diffrent testing strategies, It taught me the importance of
+good design, planning, and keeping up with best practices in software development.
+
+### What I Would Improve
+
+Too many things should be imporved ;)
+Given more time, there are several aspects I would focus on enhancing:
+1- Implementing more robust caching strategies to optimise data retrieval.
+2- Refactoring and cleaning up the codebase to enhance readability, maintainability, and
+overall quality.
+3- Implementing a comprehensive testing framework to ensure code reliability and identify
+potential issues. i have only added some test cases for unit tests and e2e test just to show you how things are in my mind.
+4- As we are dealing with an sql database i wanted to decribe a plan for migrations using typeorm i started working on but Unfortunately i was not able to finish it. So i kept auto-migration `true` for developments.
+5- Unfortunately my credit at GCP ended, i wanted to have a ci-cd to deploy it with diffrent env (dev, staging, production, qa, demo) i have added github actions shows that what i wanted to do. So let's disscuss it in our Meeting.
+
+...... Indeed in our domain always there're too many things should be improved with time.
+
+### Thank You
+
+A big thank you to the WHATEVER.WORKS team for this opportunity. Working on this challenge has been
+both fun and educational. I appreciate the chance to learn new things and contribute to your
+team's goals. Thanks again!
