@@ -8,8 +8,8 @@ export class RegisterDto implements IRegisterBodyDto {
   @MinLength(4, {
     message: 'Username is too short. Minimum length is 4 characters.',
   })
-  @MaxLength(20, {
-    message: 'Username is too long. Maximum length is 20 characters.',
+  @MaxLength(100, {
+    message: 'Username is too long. Maximum length is 100 characters.',
   })
   username: string;
 

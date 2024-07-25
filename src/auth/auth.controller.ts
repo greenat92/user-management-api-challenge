@@ -6,6 +6,7 @@ import {
   Req,
   UseGuards,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -33,6 +34,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -54,6 +56,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login a user' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -80,6 +83,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Logout a user' })
   @ApiResponse({
@@ -98,6 +102,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh access token using refresh token' })
   @ApiResponse({
     status: HttpStatus.OK,

@@ -3,10 +3,10 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { ConfigService } from '@nestjs/config';
 import { CustomLogger } from '../shared/custom-logger/custom-logger.service';
 import {
   ILoginBodyDto,
@@ -18,7 +18,7 @@ import {
 } from './auth.interface';
 import { IUser } from '../users/users.interface';
 import { BlacklistedTokensService } from './blacklisted-tokens.service';
-import { UserCacheService } from '@shared/services/cache/user-cache.service';
+import { UserCacheService } from '../shared/services/cache/user-cache.service';
 
 @Injectable()
 export class AuthService {
