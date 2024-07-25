@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse } from '@nestjs/swagger';
 
-@Controller('health-check')
+@Controller('')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

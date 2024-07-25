@@ -15,13 +15,13 @@ describe('AppController', () => {
   });
 
   describe('Health check', () => {
-    it('should return 200', () => {
+    it('[UNIT] should return 200', () => {
       const mockUptime = 15;
-      const mockVerios = '1.0.1';
+      const mockVerios = '0.0.1';
       jest.spyOn(process, 'uptime').mockReturnValue(mockUptime);
       expect(appController.getServiceInfo()).toEqual({
-        mockVerios,
-        name: 'Yassir auth service!',
+        version: mockVerios,
+        name: 'user-management-api-challenge',
         uptime: mockUptime,
       });
       jest.restoreAllMocks();

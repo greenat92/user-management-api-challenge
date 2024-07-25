@@ -1,5 +1,15 @@
 # User Management and Auth Service API
 
+This project was created as part of the hiring challenge presented by the WHATEVER.WORKS team. I'd like to take a moment to extend my heartfelt
+gratitude to the WHATEVER.WORKS team for offering me this incredible opportunity. Working on this
+challenge has been both enlightening and rewarding, and I deeply appreciate the trust and
+confidence they've placed in me.
+This challenge not only allowed me to showcase my skills but also provided a platform to
+learn, grow, and collaborate. I value this opportunity greatly and am excited about the
+potential to contribute further to the WHATEVER.WORKS team's goals and vision.
+
+Thank you once again to the WHATEVER.WORKS team for this amazing opportunity!
+
 ## Project Overview
 
 This project is a User Management and Authentication Service API built using NestJS, TypeORM, SQLite, and Docker. It provides features such as user registration, authentication, and profile management. The project uses TypeORM for database operations and SQLite as the database. Docker is used to containerize the application for easy deployment and development.
@@ -8,7 +18,7 @@ This project is a User Management and Authentication Service API built using Nes
 
 - **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
 - **TypeORM**: An ORM for TypeScript and JavaScript (ES7, ES6, ES5) that supports many database types.
-- **SQLite**: A C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+- **SQLite**: A small, fast, self-contained, high-reliability, full-featured, SQL database engine.
 - **Docker**: A tool designed to make it easier to create, deploy, and run applications by using containers.
 - **Swagger**: A tool for documenting APIs.
 - **Helmet**: A middleware for securing Express apps by setting various HTTP headers.
@@ -31,7 +41,7 @@ This project is a User Management and Authentication Service API built using Nes
 
 - **Node.js**: Ensure you have Node.js installed.
 - **Docker**: Ensure you have Docker installed.
-- **Yarn**: Ensure you have Yarn installed (optional but recommended).
+- **Npm**: Ensure you have npm installed (optional but recommended specially for docker).
 
 ## Getting Started
 
@@ -45,6 +55,7 @@ Here's a brief overview of the key functionalities i’ve implemented so far for
    - **update User Profile**: Enables users to update their profile information and change their password.
 
 2. **Authentication**
+
    - **User Registration**: Allows users to sign up by providing their username and password. Passwords are securely hashed before storage.
    - **User Login**: Authenticates users and issues JWT access and refresh tokens for secure session management.
    - **JWT Authentication**: Utilizes JSON Web Tokens (JWT) to manage user sessions securely. Access tokens have an expiration time, and refresh tokens are used to obtain new access tokens without requiring re-login.
@@ -52,10 +63,12 @@ Here's a brief overview of the key functionalities i’ve implemented so far for
    - **Token Blacklisting**: Implements token blacklisting to handle logouts and invalidate tokens, ensuring they cannot be used after logout.
 
 3. **Database Setup and Management**
+
    - **SQLite Database**: Uses SQLite as the database solution for development and testing. The database is set up with TypeORM and supports user management operations.
    - **Testing Setup**: Includes scripts for setting up a test database with SQLite, clearing collections, and seeding data.
 
 4. **Testing Strategies**
+
    - **Unit Testing**: Tests individual components of the application to ensure they work as expected.
    - **Integration Testing**: Verifies that different parts of the system work together correctly.
    - **End-to-End (E2E) Testing**: Simulates real user scenarios to ensure the entire application functions properly.
@@ -73,7 +86,7 @@ This setup ensures robust user management, secure authentication, and thorough t
 ```bash
 git clone https://github.com/greenat92/user-management-api-challenge
 cd user-management-api-challenge
-yarn install
+npm install
 ```
 
 ### Environment Variables
@@ -91,9 +104,9 @@ HOST=localhost
 APP_NAME=management and auth service api
 APP_ENV=local
 APP_URL=http://localhost:3000/
-DB_NAME=localUsersDb.sqlite
+DB_NAME=db.sqlite
 DB_URI=
-DB_NAME_TESTING=localUsersDbTesting.sqlite
+DB_NAME_TESTING=dbTesting.sqlite
 DB_URI_TESTING=
 DATABASE_CONFIG=
 LOG_LEVEL=info
@@ -111,7 +124,7 @@ LOG_LEVEL=info
 - **Run the Application**
 
   ```bash
-  yarn start:dev
+  npm run start:dev
   ```
 
 #### Using Docker
@@ -135,49 +148,49 @@ LOG_LEVEL=info
 1. **Setup Test Database**
 
    ```bash
-   yarn test:db-setup:backend
+   npm run test:db-setup
    ```
 
 2. **Run All Tests**
 
    ```bash
-   yarn test
+   npm run test
    ```
 
 3. **Run Unit Tests**
 
    ```bash
-   yarn test:unit
+   npm run test:unit
    ```
 
 4. **Run smoke tests**
 
    ```bash
-   yarn test:smoke
+   npm run test:smoke
    ```
 
 5. **Run smoke e2e tests**
 
    ```bash
-   yarn test:e2e
+   npm run test:e2e
    ```
 
 6. **Watch Tests**
 
    ```bash
-   yarn test:watch
+   npm run test:watch
    ```
 
 7. **Run Tests with Coverage**
 
    ```bash
-   yarn test:cov
+   npm run test:cov
    ```
 
 8. **Debug Tests**
 
    ```bash
-   yarn test:db-setup:debug
+   npm run test:debug
    ```
 
 ### Formatting and Linting
@@ -185,22 +198,22 @@ LOG_LEVEL=info
 - **Format Code**
 
   ```bash
-  yarn format
+  npm run format
   ```
 
 - **Format Code**
 
   ```bash
-  yarn yarn lint
+  npm run lint
   ```
 
 ### Deployment
 
-For production deployment, build the application and start it using:
+For production deployment, build the application and start using it:
 
 ```bash
-  yarn build
-  yarn start:prod
+  npm run build
+  npm run start:prod
 ```
 
 ### Logs and Error Handling
@@ -228,22 +241,27 @@ I proposed the adoption of a dedicated `src/shared/helpers/PerformanceMeasureHel
 This section to answer the last question of the challenge based on my experience on testing and what implemented so far for this challenge, As known as Testing is key to making sure software works well and is reliable. Here’s a quick look at the different types of testing we use:
 
 1. **Unit Testing**:
+
    - Tests individual parts of the code.
    - Catches bugs early and makes fixing them easier.
 
 2. **Integration Testing**:
+
    - Checks how different parts of the system work together.
    - Finds issues with how modules interact.
 
 3. **End-to-End (E2E) Testing**:
+
    - Simulates real user scenarios to test the whole system.
    - Ensures everything works from start to finish.
 
 4. **Smoke Testing**:
+
    - Quickly checks if key features work after changes.
    - Helps catch major issues early.
 
 5. **Regression Testing**:
+
    - Ensures new changes don’t break existing features.
    - Verifies that old bugs haven’t reappeared.
 
@@ -258,6 +276,56 @@ This section to answer the last question of the challenge based on my experience
 - **Safe Changes**: Confirms that new updates don’t break anything.
 - **Documentation**: Acts as a guide to how the software should work.
 
-### Summary
+### Testing Summary
 
 Testing helps us build reliable and high-quality software by finding issues early, ensuring everything works together, and verifying performance under stress. It’s essential for delivering stable and trustworthy applications.
+
+Also I took some notes about designing a rest api:
+
+### REST architecture
+
+ensures clear communication and interoperability, making it easier to
+integrate and scale services.
+
+### Caching
+
+boosts performance by storing frequently accessed data, reducing the load on the
+database and improving response times. in our case cache the user data.
+
+### Documentation
+
+is crucial in software development as it provides a clear understanding of
+code functionality, aids in troubleshooting, and ensures maintainability for future developers.
+In our case there’s 2 docs, the README file explaining how to run the project, and an
+auto-generated api to explain the apis usage with examples for responses and code errors.
+
+### Conclusion & Result
+
+I've built a REST API with NestJS and sqlite as a database for basic user managements and auth api. with some testing cases and
+define some ci-cd workflow using github actions
+
+#### What I Learned
+
+This project was a fantastic learning experience. I got hands-on practice with NestJS,
+Sqlite some diffrent testing strategies, It taught me the importance of
+good design, planning, and keeping up with best practices in software development.
+
+### What I Would Improve
+
+Too many things should be imporved ;)
+Given more time, there are several aspects I would focus on enhancing:
+1- Implementing more robust caching strategies to optimise data retrieval.
+2- Refactoring and cleaning up the codebase to enhance readability, maintainability, and
+overall quality.
+3- Implementing a comprehensive testing framework to ensure code reliability and identify
+potential issues. i have only added some test cases for unit tests and e2e test just to show you how things are in my mind.
+4- As we are dealing with an sql database i wanted to decribe a plan for migrations using typeorm i started working on but Unfortunately i was not able to finish it. So i kept auto-migration `true` for developments.
+5- Unfortunately my credit at GCP ended, i wanted to have a ci-cd to deploy it with diffrent env (dev, staging, production, qa, demo) i have added github actions shows that what i wanted to do. So let's disscuss it in our Meeting.
+
+...... Indeed in our domain always there're too many things should be improved with time.
+
+### Thank You
+
+A big thank you to the WHATEVER.WORKS team for this opportunity. Working on this challenge has been
+both fun and educational. I appreciate the chance to learn new things and contribute to your
+team's goals. Thanks again!

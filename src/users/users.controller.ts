@@ -6,6 +6,7 @@ import {
   Req,
   UseGuards,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UpdateMeUserDto } from './dtos/update-user.dto';
 import {
@@ -40,8 +41,11 @@ export class UsersController {
   })
   @ApiBearerAuth()
   async getMe(@Req() req: Request) {
-    const userId = req.user['id']; // Extracted from the JWT token
-    return this.usersMeService.getUserMe(userId);
+    if (!req.user) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+    const username = req.user['username']; // Extracted from the JWT token
+    return this.usersMeService.getUserMe(username);
   }
 
   @Patch('me')
@@ -64,6 +68,9 @@ export class UsersController {
   })
   @ApiBearerAuth()
   async updateMe(@Req() req: Request, @Body() updateUserDto: UpdateMeUserDto) {
+    if (!req.user) {
+      throw new UnauthorizedException('Unauthorized');
+    }
     const userId = req.user['id']; // Extracted from the JWT token
     return this.usersMeService.updateUserMe(userId, updateUserDto);
   }

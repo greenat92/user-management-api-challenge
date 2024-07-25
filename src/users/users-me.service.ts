@@ -10,14 +10,30 @@ import {
   IUserUpdateMeRes,
 } from './users.interface';
 import { UsersService } from './users.service';
+import { UserCacheService } from '../shared/services/cache/user-cache.service';
+import { IUser } from './users.interface';
 
 @Injectable()
 export class UsersMeService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private readonly userCacheService: UserCacheService,
+  ) {}
 
   // UserMe methods
-  async getUserMe(id: number): Promise<IUserMeRes> {
-    const existingUser = await this.usersService.findUserById(id);
+  async getUserMe(username: string): Promise<IUserMeRes> {
+    let existingUser: Partial<IUser> | undefined;
+
+    // fetch user from cache
+    existingUser = await this.userCacheService.getUserCache(username);
+
+    // user is not in the cache
+    if (!existingUser) {
+      // get user from database
+      existingUser = await this.usersService.findUserByUsername(username);
+    }
+    existingUser = await this.usersService.findUserByUsername(username);
+
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
@@ -59,6 +75,14 @@ export class UsersMeService {
     }
 
     const updatedUser = await this.usersService.saveUser(user);
+
+    // Check if updatedUser has necessary properties
+    if (!updatedUser || !updatedUser.username) {
+      throw new ConflictException('Error updating user');
+    }
+
+    // Set cache
+    this.userCacheService.setUserCache(updatedUser.username, updatedUser);
 
     return {
       username: updatedUser.username,
