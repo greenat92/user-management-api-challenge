@@ -70,10 +70,8 @@ Here's a brief overview of the key functionalities i’ve implemented so far for
 4. **Testing Strategies**
 
    - **Unit Testing**: Tests individual components of the application to ensure they work as expected.
-   - **Integration Testing**: Verifies that different parts of the system work together correctly.
    - **End-to-End (E2E) Testing**: Simulates real user scenarios to ensure the entire application functions properly.
    - **Smoke Testing**: Quickly checks key functionalities after changes to catch major issues early.
-   - **Regression Testing**: Ensures new changes don’t break existing functionality.
    - **Stress Testing**: Tests how the system performs under heavy load to ensure stability and performance.
 
 5. **API Documentation**
