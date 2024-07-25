@@ -76,7 +76,12 @@ export class UsersMeService {
 
     const updatedUser = await this.usersService.saveUser(user);
 
-    // set cache
+    // Check if updatedUser has necessary properties
+    if (!updatedUser || !updatedUser.username) {
+      throw new ConflictException('Error updating user');
+    }
+
+    // Set cache
     this.userCacheService.setUserCache(updatedUser.username, updatedUser);
 
     return {

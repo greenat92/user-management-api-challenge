@@ -5,7 +5,7 @@ export enum Environment {
   // server execution
   Dev = 'dev',
   Staging = 'staging',
-  Production = 'prod',
+  Production = 'production',
   Demo = 'demo',
 
   // testing
