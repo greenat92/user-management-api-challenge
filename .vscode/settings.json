@@ -1,4 +1,12 @@
 {
-    "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:user-management-api-challenge}/db.sqlite",
+      "name": "users"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }
-  
