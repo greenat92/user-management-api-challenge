@@ -312,12 +312,17 @@ good design, planning, and keeping up with best practices in software developmen
 
 Too many things should be imporved ;)
 Given more time, there are several aspects I would focus on enhancing:
+
 1- Implementing more robust caching strategies to optimise data retrieval.
+
 2- Refactoring and cleaning up the codebase to enhance readability, maintainability, and
 overall quality.
+
 3- Implementing a comprehensive testing framework to ensure code reliability and identify
 potential issues. i have only added some test cases for unit tests and e2e test just to show you how things are in my mind.
+
 4- As we are dealing with an sql database i wanted to decribe a plan for migrations using typeorm i started working on but Unfortunately i was not able to finish it. So i kept auto-migration `true` for developments.
+
 5- Unfortunately my credit at GCP ended, i wanted to have a ci-cd to deploy it with diffrent env (dev, staging, production, qa, demo) i have added github actions shows that what i wanted to do. So let's disscuss it in our Meeting.
 
 ...... Indeed in our domain always there're too many things should be improved with time.
