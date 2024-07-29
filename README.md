@@ -280,7 +280,7 @@ Testing helps us build reliable and high-quality software by finding issues earl
 
 ### Watch the Demo
 
-[![Watch the video](https://www.awesomescreenshot.com/video/29976918?key=5a0786528f0bc6095248e3fc25af794a)](docs-demo)
+Watch the demo video [here](https://www.awesomescreenshot.com/video/29976918?key=5a0786528f0bc6095248e3fc25af794a).
 
 Also I took some notes about designing a rest api:
 
