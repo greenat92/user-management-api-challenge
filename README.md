@@ -125,6 +125,14 @@ LOG_LEVEL=info
   npm run start:dev
   ```
 
+- **Access the Application**
+
+  The application will be running on <http://localhost:3000/api>
+
+- **Swagger Documentation**
+
+  Access the API documentation at <http://localhost:3000/api/docs>.
+
 #### Using Docker
 
 - **Build and Run the Containers**
@@ -132,14 +140,6 @@ LOG_LEVEL=info
   ```bash
   docker-compose up --build
   ```
-
-- **Access the Application**
-
-  The application will be running on <http://localhost:3000/api/docs>
-
-- **Swagger Documentation**
-
-  Access the API documentation at <http://localhost:3000/api/docs>.
 
 ### Running Tests
 
