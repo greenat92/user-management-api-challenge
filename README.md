@@ -278,6 +278,10 @@ This section to answer the last question of the challenge based on my experience
 
 Testing helps us build reliable and high-quality software by finding issues early, ensuring everything works together, and verifying performance under stress. It’s essential for delivering stable and trustworthy applications.
 
+### Watch the Demo
+
+[![Watch the video](https://www.awesomescreenshot.com/video/29976918?key=5a0786528f0bc6095248e3fc25af794a)](docs-demo)
+
 Also I took some notes about designing a rest api:
 
 ### REST architecture
